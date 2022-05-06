@@ -1,0 +1,14 @@
+works/weave/socks/queuemaster/configuration/ShippingConsumerConfiguration.class
+works/weave/socks/queuemaster/configuration/RabbitMqConfiguration.class
+works/weave/socks/queuemaster/controllers/HealthCheckController$1.class
+works/weave/socks/queuemaster/controllers/HealthCheckController.class
+works/weave/socks/shipping/entities/Shipment.class
+works/weave/socks/queuemaster/DockerSpawner.class
+works/weave/socks/queuemaster/configuration/PrometheusEndpointContextConfiguration.class
+works/weave/socks/queuemaster/ShippingTaskHandler.class
+works/weave/socks/queuemaster/controllers/PrometheusEndpoint.class
+works/weave/socks/queuemaster/controllers/PrometheusMvcEndpoint.class
+works/weave/socks/queuemaster/entities/HealthCheck.class
+works/weave/socks/queuemaster/monitoring/PrometheusMetricWriter.class
+works/weave/socks/queuemaster/QueueMasterApplication.class
+works/weave/socks/queuemaster/DockerSpawner$1.class

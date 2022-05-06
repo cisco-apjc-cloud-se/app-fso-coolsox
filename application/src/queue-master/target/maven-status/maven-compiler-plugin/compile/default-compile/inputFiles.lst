@@ -1,0 +1,12 @@
+/usr/src/mymaven/src/main/java/works/weave/socks/shipping/entities/Shipment.java
+/usr/src/mymaven/src/main/java/works/weave/socks/queuemaster/configuration/RabbitMqConfiguration.java
+/usr/src/mymaven/src/main/java/works/weave/socks/queuemaster/QueueMasterApplication.java
+/usr/src/mymaven/src/main/java/works/weave/socks/queuemaster/configuration/PrometheusEndpointContextConfiguration.java
+/usr/src/mymaven/src/main/java/works/weave/socks/queuemaster/controllers/PrometheusMvcEndpoint.java
+/usr/src/mymaven/src/main/java/works/weave/socks/queuemaster/controllers/PrometheusEndpoint.java
+/usr/src/mymaven/src/main/java/works/weave/socks/queuemaster/entities/HealthCheck.java
+/usr/src/mymaven/src/main/java/works/weave/socks/queuemaster/monitoring/PrometheusMetricWriter.java
+/usr/src/mymaven/src/main/java/works/weave/socks/queuemaster/DockerSpawner.java
+/usr/src/mymaven/src/main/java/works/weave/socks/queuemaster/ShippingTaskHandler.java
+/usr/src/mymaven/src/main/java/works/weave/socks/queuemaster/configuration/ShippingConsumerConfiguration.java
+/usr/src/mymaven/src/main/java/works/weave/socks/queuemaster/controllers/HealthCheckController.java

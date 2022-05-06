@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+  labels:
+    name: rabbitmq
+    app: queue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: rabbitmq
+  template:
+    metadata:
+      labels:
+        name: rabbitmq
+        app: queue
+        version: v1
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:3.6.8
+        imagePullPolicy: {{ .Values.kubernetes.imagePullPolicy }}
+        ports:
+        - containerPort: 5672
+        securityContext:
+          capabilities:
+            drop:
+              - all
+            add:
+              - CHOWN
+              - SETGID
+              - SETUID
+              - DAC_OVERRIDE
+          readOnlyRootFilesystem: {{ .Values.kubernetes.readOnlyRootFilesystem }}

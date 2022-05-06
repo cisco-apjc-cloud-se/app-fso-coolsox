@@ -1,0 +1,85 @@
+# Generic settings controlling kubernetes image poll policy and java environment
+
+appd:
+    APPD_APPNAME: "coolsox-rw"
+    # APPD_TIERNAME: "orderproc"
+    # APPD_NODENAME: "orderproc01"
+    APPD_CONTROLLER_HOST: "jodynichols-trial.saas.appdynamics.com"
+    APPD_CONTROLLER_PORT: "443"
+    APPD_CONTROLLER_USE_SSL: "true"
+    APPD_CONTROLLER_ACCOUNT: "jodynichols-trial"
+    APPD_CONTROLLER_ACCESS_KEY: "2ln03h4r8sy0"
+
+kubernetes:
+    repository: public.ecr.aws/j8r8c0y6/coolsox
+    imagePullPolicy: Always
+    readOnlyRootFilesystem: false
+java:
+    options: -Xms64m -Xmx128m -XX:PermSize=32m -XX:MaxPermSize=64m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom
+
+# Carts settings
+carts:
+    version: 1.0.0
+# Catalogue-db settings
+catalogue_db:
+    version: 1.0.0
+# Catalogue settings
+catalogue:
+    APPD_TIERNAME: catalogue
+    version: 1.0.0
+# Front-end settings
+frontend:
+    version: 1.0.0
+    replicas: 1
+    appd_browser_rum_enabled: false
+    # RUM Variables - note that / characters must be escaped using \/
+    AppD_appKey: <app_key>
+    AppD_adrumExtUrlHttp: http:\/\/cdn.appdynamics.com
+    AppD_adrumExtUrlHttps: https:\/\/cdn.appdynamics.com
+    AppD_beaconUrlHttp: http:\/\/fra-col.eum-appdynamics.com
+    AppD_beaconUrlHttps: https:\/\/fra-col.eum-appdynamics.com
+    AppD_adrumLocation: cdn.appdynamics.com\/adrum\/adrum-21.4.0.3405.js
+# Orders settings
+orders:
+    version: 1.0.0
+# Payment settings
+payment:
+    version: 1.0.0
+# Queue-master settings
+queue_master:
+    version: 1.0.0
+# Shipping settings
+shipping:
+    version: 1.0.0
+# User-db settings
+user_db:
+    version: 1.0.0
+# User settings
+user:
+    version: 1.0.0
+
+# Controls the deployment of kubernets ingress controller for front-end
+ingress:
+    enabled: true
+
+# Controls the deployment of kubernetes loadbalancer for front-end
+loadbalancer:
+    enabled: false
+
+# Controls the deployment of build-in load-test
+loadtest:
+    version: 1.0.0
+    replicas: 0
+    enabled: true
+
+# Controls the deployment of AppDynamics DB Agent
+appdynamics:
+    enabled: false
+    controller_host: <hostname>
+    controller_port: 443
+    account_name: <account name>
+    account_access_key: <account-access-key>
+    dbagent_name: <database agent name>
+    dbagent_version: 21.9.0.2521
+    mongodb_user: <mongodb username>
+    mongodb_password: <mongodb password>
