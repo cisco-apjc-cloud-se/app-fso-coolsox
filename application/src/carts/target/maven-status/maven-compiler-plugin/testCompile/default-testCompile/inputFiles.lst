@@ -1,0 +1,10 @@
+/usr/src/mymaven/src/test/java/works/weave/socks/cart/cart/UnitCartContentsResource.java
+/usr/src/mymaven/src/test/java/works/weave/socks/cart/controllers/UnitItemsController.java
+/usr/src/mymaven/src/test/java/works/weave/socks/cart/controllers/UnitCartsController.java
+/usr/src/mymaven/src/test/java/works/weave/socks/cart/cart/UnitCartResource.java
+/usr/src/mymaven/src/test/java/works/weave/socks/cart/item/UnitFoundItem.java
+/usr/src/mymaven/src/test/java/works/weave/socks/cart/repositories/ITCartRepository.java
+/usr/src/mymaven/src/test/java/works/weave/socks/cart/controllers/UnitHealthCheckController.java
+/usr/src/mymaven/src/test/java/works/weave/socks/cart/item/UnitItemResource.java
+/usr/src/mymaven/src/test/java/works/weave/socks/cart/repositories/ITItemRepository.java
+/usr/src/mymaven/src/test/java/works/weave/socks/cart/action/UnitFirstResultOrDefault.java

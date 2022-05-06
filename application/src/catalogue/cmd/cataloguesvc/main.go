@@ -115,7 +115,7 @@ func main() {
 
 	// AppDynamics Backend - MySQL Database
 	backendName := "catalogue-db"
-	backendType := "APPD_BACKEND_DB"
+	backendType := appd.APPD_BACKEND_DB
 	backendProperties := map[string]string{
 		"HOST":"catalogue-db",
 		"PORT":"3306",
@@ -204,6 +204,7 @@ func main() {
 	// HTTP router
 	router := catalogue.MakeHTTPHandler(ctx, endpoints, *images, logger, tracer)
 
+	// Inject AppDynamics Middleware
 	router.Use(appdynamicsMiddleware)
 
 	httpMiddleware := []middleware.Interface{

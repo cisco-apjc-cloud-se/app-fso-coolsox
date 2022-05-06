@@ -10,6 +10,9 @@ import (
 
 	"github.com/go-kit/kit/log"
 	"github.com/jmoiron/sqlx"
+
+	// AppDynamics Go SDK Agent
+	appd "appdynamics"
 )
 
 // Service is the catalogue service, providing read operations on a saleable
@@ -147,15 +150,27 @@ func (s *catalogueService) Count(tags []string) (int, error) {
 func (s *catalogueService) Get(id string) (Sock, error) {
 	query := baseQuery + " WHERE sock.sock_id =? GROUP BY sock.sock_id;"
 
+	// AppD
+	btHandle := appd.StartBT("MySQL Get Test", "")
+	exitHandle := appd.StartExitcall(btHandle,"catalogue-db")
+
 	var sock Sock
 	err := s.db.Get(&sock, query, id)
 	if err != nil {
 		s.logger.Log("database error", err)
+
+		// AppD
+		appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "database error", true)
+		
 		return Sock{}, ErrNotFound
 	}
 
 	sock.ImageURL = []string{sock.ImageURL_1, sock.ImageURL_2}
 	sock.Tags = strings.Split(sock.TagString, ",")
+
+	// AppD
+	appd.EndExitcall(exitHandle)
+	appd.EndBT(btHandle)
 
 	return sock, nil
 }
