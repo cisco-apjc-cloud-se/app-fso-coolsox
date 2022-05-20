@@ -1,0 +1,12 @@
+apiVersion: v1
+entries:
+  helm-chart:
+  - apiVersion: v1
+    created: "2022-05-20T17:22:04.661827+10:00"
+    description: A Helm chart for CoolSox
+    digest: 26c252b672fb343c3c0de124d9f6cb3aa9d86df68f544b29df66853cdd3cd2a5
+    name: helm-chart
+    urls:
+    - coolsox-0.0.1.tgz
+    version: 0.2.0
+generated: "2022-05-20T17:22:04.660192+10:00"
