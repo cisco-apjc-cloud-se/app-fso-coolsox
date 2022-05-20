@@ -1,4 +1,4 @@
-{{- if .Values.appdynamics.enabled }}
+{{- if .Values.appdynamics_db_agent.enabled }}
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -6,9 +6,9 @@ metadata:
 data:
   controller-info.xml: |+
     <controller-info>
-        <controller-host>{{ .Values.appdynamics.controller_host }}</controller-host>
-        <controller-port>{{ .Values.appdynamics.controller_port }}</controller-port>
-        <controller-ssl-enabled>true</controller-ssl-enabled>
+        <controller-host>{{ .Values.appd.APPD_CONTROLLER_HOST }}</controller-host>
+        <controller-port>{{ .Values.appd.APPD_CONTROLLER_PORT }}</controller-port>
+        <controller-ssl-enabled>{{.Values.appd.APPD_CONTROLLER_USE_SSL}}</controller-ssl-enabled>
         <controller-keystore-password></controller-keystore-password>
         <use-encrypted-credentials></use-encrypted-credentials>
         <credential-store-filename></credential-store-filename>
@@ -18,8 +18,8 @@ data:
         <asymmetric-keystore-password></asymmetric-keystore-password>
         <asymmetric-key-password></asymmetric-key-password>
         <asymmetric-key-alias></asymmetric-key-alias>
-        <account-name>{{ .Values.appdynamics.account_name }}</account-name>
-        <account-access-key>{{ .Values.appdynamics.account_access_key }}</account-access-key>
+        <account-name>{{ .Values.appd.APPD_CONTROLLER_ACCOUNT }}</account-name>
+        <account-access-key>{{ .Values.appd.APPD_CONTROLLER_ACCESS_KEY }}</account-access-key>
     </controller-info>
 ---
 apiVersion: apps/v1
@@ -39,8 +39,8 @@ spec:
     spec:
       containers:
       - name: appd-db-agent
-        {{- if .Values.appdynamics }}
-        {{- if .Values.appdynamics.dbagent_version }}
+        {{- if .Values.appdynamics_db_agent }}
+        {{- if .Values.appdynamics_db_agent.version }}
         image: {{.Values.kubernetes.repository}}:appd-db-agent-{{.Values.appdynamics.dbagent_version}}
         {{- else }}
         image: {{.Values.kubernetes.repository}}:appd-db-agent
