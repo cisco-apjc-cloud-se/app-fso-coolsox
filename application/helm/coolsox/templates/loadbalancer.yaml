@@ -1,4 +1,4 @@
-{{- if .Values.loadbalancer.enabled }}
+{{- if .Values.frontend.loadbalancer.enabled }}
 apiVersion: v1
 kind: Service
 metadata:

@@ -22,10 +22,18 @@ frontend:
     # BUM Variables - note that / characters must be escaped using \/
     AppD_appKey: <app_key>
     AppD_adrumExtUrlHttp: http:\/\/cdn.appdynamics.com
-    AppD_adrumExtUrlHttps: https:\/\/cdn.appdynamics.com 
+    AppD_adrumExtUrlHttps: https:\/\/cdn.appdynamics.com
     AppD_beaconUrlHttp: http:\/\/fra-col.eum-appdynamics.com
     AppD_beaconUrlHttps: https:\/\/fra-col.eum-appdynamics.com
     AppD_adrumLocation: cdn.appdynamics.com\/adrum\/adrum-21.4.0.3405.js
+    # Controls the deployment of kubernets ingress controller for front-end
+    ingress:
+        enabled: false
+
+    # Controls the deployment of kubernetes loadbalancer for front-end
+    loadbalancer:
+        enabled: true
+
 # Orders settings
 orders:
     version: 1.0.0
@@ -44,14 +52,6 @@ user_db:
 # User settings
 user:
     version: 1.0.0
-
-# Controls the deployment of kubernets ingress controller for front-end
-ingress:
-    enabled: false
-
-# Controls the deployment of kubernetes loadbalancer for front-end
-loadbalancer:
-    enabled: true
 
 # Controls the deployment of build-in load-test
 loadtest:

@@ -1,4 +1,4 @@
-{{- if .Values.ingress.enabled }}
+{{- if .Values.frontend.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -6,7 +6,7 @@ metadata:
   annotations:
     # kubernetes.io/ingress.class: nginx
     # nginx.ingress.kubernetes.io/rewrite-target: /
-    # nginx.ingress.kubernetes.io/rewrite-target: /$1 
+    # nginx.ingress.kubernetes.io/rewrite-target: /$1
     # nginx.ingress.kubernetes.io/configuration-snippet: |
     #   more_set_headers "X-Xss-Protection: 1; mode=block always;";
     # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"

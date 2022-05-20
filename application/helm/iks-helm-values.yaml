@@ -39,6 +39,14 @@ frontend:
     AppD_beaconUrlHttp: http:\/\/fra-col.eum-appdynamics.com
     AppD_beaconUrlHttps: https:\/\/fra-col.eum-appdynamics.com
     AppD_adrumLocation: cdn.appdynamics.com\/adrum\/adrum-21.4.0.3405.js
+    # Controls the deployment of kubernets ingress controller for front-end
+    ingress:
+        enabled: true
+
+    # Controls the deployment of kubernetes loadbalancer for front-end
+    loadbalancer:
+        enabled: false
+
 # Orders settings
 orders:
     version: 1.0.0
@@ -57,14 +65,6 @@ user_db:
 # User settings
 user:
     version: 1.0.0
-
-# Controls the deployment of kubernets ingress controller for front-end
-ingress:
-    enabled: true
-
-# Controls the deployment of kubernetes loadbalancer for front-end
-loadbalancer:
-    enabled: false
 
 # Controls the deployment of build-in load-test
 loadtest:
