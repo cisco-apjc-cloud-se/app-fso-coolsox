@@ -2,11 +2,11 @@ apiVersion: v1
 entries:
   coolsox:
   - apiVersion: v1
-    created: "2022-05-20T17:39:39.562024+10:00"
+    created: "2022-05-20T17:46:09.732324+10:00"
     description: A Helm chart for CoolSox orchestrated for AppDynamics
-    digest: 33e9e48bc3e7020df6d594754cd1d6df80a1a1172cf96ce88c88ccb06486ea4e
+    digest: 3ecffb63d5af3d63249e904de824c39fa55f1ac88143486694cb69826fdba244
     name: coolsox
     urls:
     - coolsox-0.2.0.tgz
     version: 0.2.0
-generated: "2022-05-20T17:39:39.560368+10:00"
+generated: "2022-05-20T17:46:09.729979+10:00"

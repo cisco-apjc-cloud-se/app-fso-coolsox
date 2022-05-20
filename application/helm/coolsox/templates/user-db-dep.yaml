@@ -45,7 +45,7 @@ spec:
         volumeMounts:
         - mountPath: /tmp
           name: tmp-volume
-        {{- if .Values.appdynamics.enabled }}
+        {{- if .Values.appdynamics_db_agent.enabled }}
         - name: mongodb-init-config
           mountPath: /docker-entrypoint-initdb.d/mongo-init.js
           subPath: mongo-init.js
