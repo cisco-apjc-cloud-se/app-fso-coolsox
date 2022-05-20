@@ -59,7 +59,7 @@ loadtest:
     enabled: false
 
 # Controls the deployment of AppDynamics DB Agent
-appdynamics:
+appdynamics_db_agent:
     enabled: false
     controller_host: <Controller URL>
     controller_port: 443

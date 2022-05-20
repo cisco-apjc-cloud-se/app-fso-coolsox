@@ -40,8 +40,8 @@ spec:
       containers:
       - name: appd-db-agent
         {{- if .Values.appdynamics_db_agent }}
-        {{- if .Values.appdynamics_db_agent.version }}
-        image: {{.Values.kubernetes.repository}}:appd-db-agent-{{.Values.appdynamics.dbagent_version}}
+        {{- if .Values.appdynamics_db_agent.dbagent_version }}
+        image: {{.Values.kubernetes.repository}}:appd-db-agent-{{.Values.appdynamics_db_agent.dbagent_version}}
         {{- else }}
         image: {{.Values.kubernetes.repository}}:appd-db-agent
         {{- end }}
@@ -50,7 +50,7 @@ spec:
         {{- end }}
         imagePullPolicy: IfNotPresent
         command: ["/home/appd/db-agent/start-dbagent"]
-        args: ["-Ddbagent.name={{ .Values.appdynamics.dbagent_name }}"]
+        args: ["-Ddbagent.name={{ .Values.appdynamics_db_agent.dbagent_name }}"]
         volumeMounts:
           - name: appd-db-agent-config-volume
             mountPath: /home/appd/db-agent/conf/controller-info.xml
