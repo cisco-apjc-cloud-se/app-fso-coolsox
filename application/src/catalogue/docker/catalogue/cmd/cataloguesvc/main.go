@@ -105,7 +105,7 @@ func main() {
 	cfg.Controller.UseSSL = appd_usessl // false
 	cfg.Controller.Account = os.Getenv("APPD_CONTROLLER_ACCOUNT") // "customer1"
 	cfg.Controller.AccessKey = os.Getenv("APPD_CONTROLLER_ACCESS_KEY")// "secret"
-	cfg.InitTimeoutMs = 5000  // Wait up to 1s for initialization to finish
+	cfg.InitTimeoutMs = 5000  // Wait up to 1s for initialization to finish // Needs to be >1s <5s for Backend..
 
 	if err := appd.InitSDK(&cfg); err != nil {
 		fmt.Printf("Error initializing the AppDynamics SDK\n")
@@ -115,7 +115,7 @@ func main() {
 
 	// AppDynamics Backend - MySQL Database
 	backendName := "catalogue-db"
-	backendType := "APPD_BACKEND_DB"
+	backendType := appd.APPD_BACKEND_DB
 	backendProperties := map[string]string{
 		"HOST":"catalogue-db",
 		"PORT":"3306",
@@ -204,6 +204,7 @@ func main() {
 	// HTTP router
 	router := catalogue.MakeHTTPHandler(ctx, endpoints, *images, logger, tracer)
 
+	// Inject AppDynamics Middleware
 	router.Use(appdynamicsMiddleware)
 
 	httpMiddleware := []middleware.Interface{
