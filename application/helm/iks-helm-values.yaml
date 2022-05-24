@@ -8,7 +8,7 @@ appd:
     APPD_CONTROLLER_PORT: "443"
     APPD_CONTROLLER_USE_SSL: "true"
     APPD_CONTROLLER_ACCOUNT: "jodynichols-trial"
-    APPD_CONTROLLER_ACCESS_KEY: "2ln03h4r8sy0"
+    APPD_CONTROLLER_ACCESS_KEY: "<key>"
 
 kubernetes:
     repository: public.ecr.aws/j8r8c0y6/coolsox
@@ -42,6 +42,7 @@ frontend:
     # Controls the deployment of kubernets ingress controller for front-end
     ingress:
         enabled: true
+        url: fso-demo-app.cisco.com
 
     # Controls the deployment of kubernetes loadbalancer for front-end
     loadbalancer:

@@ -13,7 +13,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: socks.mel.ciscolabs.com
+  - host: {{ .Values.frontend.ingress.url }}
     http:
       paths:
       - path: "/"

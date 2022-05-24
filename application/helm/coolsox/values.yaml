@@ -43,6 +43,7 @@ frontend:
     # Controls the deployment of kubernets ingress controller for front-end
     ingress:
         enabled: false
+        url: <url>
     # Controls the deployment of kubernetes loadbalancer for front-end
     loadbalancer:
         enabled: false
