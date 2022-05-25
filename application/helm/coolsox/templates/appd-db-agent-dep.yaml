@@ -6,8 +6,8 @@ metadata:
 data:
 #  ----- comment out properties whichever required -----
   APPDYNAMICS_CONTROLLER_HOST_NAME: {{.Values.appd.APPD_CONTROLLER_HOST}}
-  APPDYNAMICS_CONTROLLER_PORT: {{.Values.appd.APPD_CONTROLLER_PORT}}
-  APPDYNAMICS_CONTROLLER_SSL_ENABLED: {{.Values.appd.APPD_CONTROLLER_USE_SSL}}
+  APPDYNAMICS_CONTROLLER_PORT: {{ quote .Values.appd.APPD_CONTROLLER_PORT}}
+  APPDYNAMICS_CONTROLLER_SSL_ENABLED: {{ quote .Values.appd.APPD_CONTROLLER_USE_SSL}}
   APPDYNAMICS_DB_AGENT_NAME: {{.Values.appdynamics_db_agent.dbagent_name}}
   APPDYNAMICS_AGENT_ACCOUNT_NAME: {{.Values.appd.APPD_CONTROLLER_ACCOUNT}}
 #  ----- To set unique host id on k8s, pass db property -Ddisable.kubernetes.host.resolver=true as well in APPDYNAMICS_DB_PROPERTIES -----
