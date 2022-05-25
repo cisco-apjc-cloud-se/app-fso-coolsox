@@ -18,7 +18,7 @@ data:
 #  APPDYNAMICS_AGENT_PROXY_PASS: ""
 #  ----- Pass more system properties in below parameter separated by space. -----
 #  ----- For eg - APPDYNAMICS_DB_PROPERTIES: "-Ddbagent.telemetry.enabled=true -Dretry.on.auth.failure=false" -----
-  APPDYNAMICS_DB_PROPERTIES: {{.Values.appdynamics_db_agent.dbagent_properties}}
+  APPDYNAMICS_DB_PROPERTIES: {{ .Values.appdynamics_db_agent.dbagent_properties}}
 #
 #  please refer to $(Agent-Base-Install-Dir)/conf/controller-info.xml for more info about db agent properties
 ---
@@ -29,7 +29,7 @@ metadata:
 type: Opaque
 data:
 # ----- replace the account access-key with the original key encoded in base64 format -----
-  APPDYNAMICS_AGENT_ACCOUNT_ACCESS_KEY: {{.Values.appd.APPD_CONTROLLER_ACCESS_KEY}}
+  APPDYNAMICS_AGENT_ACCOUNT_ACCESS_KEY: {{ b64enc .Values.appd.APPD_CONTROLLER_ACCESS_KEY}}
 ---
 apiVersion: v1
 kind: ConfigMap
