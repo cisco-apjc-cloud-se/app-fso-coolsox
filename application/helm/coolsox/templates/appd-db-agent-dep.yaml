@@ -1,77 +1,126 @@
 {{- if .Values.appdynamics_db_agent.enabled }}
-kind: ConfigMap
 apiVersion: v1
+kind: ConfigMap
 metadata:
-  name: appd-db-agent-config
+  name: appd-db-agent-properties
 data:
-  controller-info.xml: |+
-    <controller-info>
-        <controller-host>{{ .Values.appd.APPD_CONTROLLER_HOST }}</controller-host>
-        <controller-port>{{ .Values.appd.APPD_CONTROLLER_PORT }}</controller-port>
-        <controller-ssl-enabled>{{.Values.appd.APPD_CONTROLLER_USE_SSL}}</controller-ssl-enabled>
-        <controller-keystore-password></controller-keystore-password>
-        <use-encrypted-credentials></use-encrypted-credentials>
-        <credential-store-filename></credential-store-filename>
-        <credential-store-password></credential-store-password>
-        <use-ssl-client-auth>false</use-ssl-client-auth>
-        <asymmetric-keystore-filename></asymmetric-keystore-filename>
-        <asymmetric-keystore-password></asymmetric-keystore-password>
-        <asymmetric-key-password></asymmetric-key-password>
-        <asymmetric-key-alias></asymmetric-key-alias>
-        <account-name>{{ .Values.appd.APPD_CONTROLLER_ACCOUNT }}</account-name>
-        <account-access-key>{{ .Values.appd.APPD_CONTROLLER_ACCESS_KEY }}</account-access-key>
-    </controller-info>
+#  ----- comment out properties whichever required -----
+  APPDYNAMICS_CONTROLLER_HOST_NAME: {{.Values.appd.APPD_CONTROLLER_HOST}}
+  APPDYNAMICS_CONTROLLER_PORT: {{.Values.appd.APPD_CONTROLLER_PORT}}
+  APPDYNAMICS_CONTROLLER_SSL_ENABLED: {{.Values.appd.APPD_CONTROLLER_USE_SSL}}
+  APPDYNAMICS_DB_AGENT_NAME: {{.Values.appdynamics_db_agent.dbagent_name}}
+  APPDYNAMICS_AGENT_ACCOUNT_NAME: {{.Values.appd.APPD_CONTROLLER_ACCOUNT}}
+#  ----- To set unique host id on k8s, pass db property -Ddisable.kubernetes.host.resolver=true as well in APPDYNAMICS_DB_PROPERTIES -----
+#  APPDYNAMICS_AGENT_UNIQUE_HOST_ID: ""
+#  APPDYNAMICS_AGENT_PROXY_HOST: ""
+#  APPDYNAMICS_AGENT_PROXY_PORT: ""
+#  APPDYNAMICS_AGENT_PROXY_USER: ""
+#  APPDYNAMICS_AGENT_PROXY_PASS: ""
+#  ----- Pass more system properties in below parameter separated by space. -----
+#  ----- For eg - APPDYNAMICS_DB_PROPERTIES: "-Ddbagent.telemetry.enabled=true -Dretry.on.auth.failure=false" -----
+  APPDYNAMICS_DB_PROPERTIES: {{.Values.appdynamics_db_agent.dbagent_properties}}
+#
+#  please refer to $(Agent-Base-Install-Dir)/conf/controller-info.xml for more info about db agent properties
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: appd-agent-secret
+type: Opaque
+data:
+# ----- replace the account access-key with the original key encoded in base64 format -----
+  APPDYNAMICS_AGENT_ACCOUNT_ACCESS_KEY: {{.Values.appd.APPD_CONTROLLER_ACCESS_KEY}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: appd-db-agent-log-config
+data:
+  log4j2.xml: |
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <Configuration status="Warn" monitorInterval="10">
+        <Appenders>
+            <Console name="ConsoleAppender" target="SYSTEM_OUT">
+                <PatternLayout pattern="%d{DATE} %5p [%t] %c{1}:%L - %m%n"/>
+            </Console>
+            <RollingFile name="FileAppender" fileName="${sys:appdynamics.agent.logs.dir}/../../logs/agent.log"
+                         filePattern="${sys:appdynamics.agent.logs.dir}/../../logs/agent.log.%i">
+                <PatternLayout pattern="[%t] %d{DATE} %5p %c{1} - %m%n"/>
+                <SizeBasedTriggeringPolicy size="5 MB"/>
+                <ADRolloverStrategyWithoutCompression max="5"/>
+            </RollingFile>
+            <RollingFile name="InternalMetricsAppender"
+                         fileName="${sys:appdynamics.agent.logs.dir}/../../logs/internal_metrics/internal_metrics.log"
+                         filePattern="${sys:appdynamics.agent.logs.dir}/../../logs/agent.log.%i">
+                <PatternLayout pattern="[%t] %d{DATE} %5p %c{1} - %m%n"/>
+                <SizeBasedTriggeringPolicy size="5 MB"/>
+                <ADRolloverStrategyWithoutCompression max="5"/>
+            </RollingFile>
+        </Appenders>
+
+        <Loggers>
+            <Logger name="com" level="info"/>
+
+            <Logger name="com.singularity.ee.agent.dbagent.DBCollectorAgentMetricManager" level="info" additivity="false">
+                <AppenderRef ref="InternalMetricsAppender"/>
+            </Logger>
+
+            <!-- Increase these levels for debugging MSSQL Basic Harware Metrics code. Setting the loggers' level to
+            debug is usually sufficient-->
+            <Logger name="com.singularity.ee.agent.dbagent.collector.db.relational.mssql.MSSql2008CollectorDelegate" level="info"/>
+
+            <!-- Increase these levels for debugging transient channel related code. Setting the first 2 loggers' level to
+            debug is usually sufficient-->
+            <!--start-->
+            <Logger name="com.singularity.ee.agent.dbagent.handler.delegate.relational.ADBTransientOpDelegate" level="info"/>
+            <Logger name="com.singularity.ee.agent.dbagent.handler.executor.ADBTransientOpExecutor" level="info"/>
+            <Logger name="com.singularity.ee.agent.dbagent.collector.server.connection.wmi.NativeClient" level="info"/>
+            <!--end-->
+
+            <!-- This will block httpclient from dumping 'wire' data so passwords et al. won't get into the log -->
+            <Logger name="org.apache.http.wire" level="debug"/>
+
+            <Root level="debug">
+                <AppenderRef ref="ConsoleAppender"/>
+            </Root>
+        </Loggers>
+    </Configuration>
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: appd-db-agent
+  name: db-agent
+  labels:
+    app: db-agent
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: appd-db-agent
+      app: db-agent
   template:
     metadata:
       labels:
-        name: appd-db-agent
-        framework: nodejs
+        app: db-agent
     spec:
       containers:
-      - name: appd-db-agent
-        {{- if .Values.appdynamics_db_agent }}
-        {{- if .Values.appdynamics_db_agent.dbagent_version }}
-        image: {{.Values.kubernetes.repository}}:appd-db-agent-{{.Values.appdynamics_db_agent.dbagent_version}}
-        {{- else }}
-        image: {{.Values.kubernetes.repository}}:appd-db-agent
-        {{- end }}
-        {{- else }}
-        image: {{.Values.kubernetes.repository}}:appd-db-agent
-        {{- end }}
-        imagePullPolicy: IfNotPresent
-        command: ["/home/appd/db-agent/start-dbagent"]
-        args: ["-Ddbagent.name={{ .Values.appdynamics_db_agent.dbagent_name }}"]
-        volumeMounts:
-          - name: appd-db-agent-config-volume
-            mountPath: /home/appd/db-agent/conf/controller-info.xml
-            subPath: controller-info.xml
-            readOnly: true
-        resources:
-          limits:
-            cpu: 300m
-            memory: 1000Mi
-          requests:
-            cpu: 100m
-            memory: 300Mi
-        securityContext:
-          runAsNonRoot: true
-          runAsUser: 1000
-          capabilities:
-            drop:
-              - all
-          readOnlyRootFilesystem: no
+        - name: db-agent
+# ------- customer can use any agent version but latest version is recommended. Also, AppDynamics only supports images published at https://hub.docker.com/r/appdynamics/db-agent/tags
+          image: appdynamics/db-agent:{{ .Values.appdynamics_db_agent.dbagent_version }}
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: appd-db-agent-properties
+            - secretRef:
+                name: appd-agent-secret
+          volumeMounts:
+            - name: logs
+              mountPath: /opt/appdynamics/db-agent/logs
+            - name: appd-db-agent-log-config
+              mountPath: /opt/appdynamics/db-agent/conf/logging
       volumes:
-        - name: appd-db-agent-config-volume
+        - name: logs
+          emptyDir: {}
+        - name: appd-db-agent-log-config
           configMap:
-            name: appd-db-agent-config
+            name: appd-db-agent-log-config
 {{- end }}

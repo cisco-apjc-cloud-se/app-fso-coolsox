@@ -80,6 +80,7 @@ appdynamics_db_agent:
     # account_name: <account name>
     # account_access_key: <account-access-key>
     dbagent_name: <database agent name>
-    dbagent_version: 21.9.0.2521
+    dbagent_version: latest # 21.9.0.2521
+    dbagent_properties: <properties>
     mongodb_user: <mongodb username>
     mongodb_password: <mongodb password>
