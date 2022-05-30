@@ -12,6 +12,10 @@ import (
 
 	"github.com/microservices-demo/user/db"
 	"github.com/microservices-demo/user/users"
+
+	// AppDynamics Go SDK Agent
+	appd "appdynamics"
+	// Note: Delete() not instrumented
 )
 
 var (
@@ -46,20 +50,37 @@ type Health struct {
 }
 
 func (s *fixedService) Login(username, password string) (users.User, error) {
+	// AppD Start BT & Exit Call
+	btHandle := appd.StartBT("MongoDB Login", "")
+	exitHandle := appd.StartExitcall(btHandle,"user-db")
+
 	u, err := db.GetUserByName(username)
 	if err != nil {
 		return users.New(), err
+		// AppD
+		appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "Database Error", true)
 	}
 	if u.Password != calculatePassHash(password, u.Salt) {
 		return users.New(), ErrUnauthorized
+		// AppD
+		appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "User Unauthorized Error", true)
 	}
 	db.GetUserAttributes(&u)
 	u.MaskCCs()
+
+	// AppD End BT & Exit Call
+	appd.EndExitcall(exitHandle)
+	appd.EndBT(btHandle)
+
 	return u, nil
 
 }
 
 func (s *fixedService) Register(username, password, email, first, last string) (string, error) {
+	// AppD Start BT & Exit Call
+	btHandle := appd.StartBT("MongoDB Register", "")
+	exitHandle := appd.StartExitcall(btHandle,"user-db")
+
 	u := users.New()
 	u.Username = username
 	u.Password = calculatePassHash(password, u.Salt)
@@ -67,65 +88,188 @@ func (s *fixedService) Register(username, password, email, first, last string) (
 	u.FirstName = first
 	u.LastName = last
 	err := db.CreateUser(&u)
+
+	// AppD Error
+	if err != nil {
+		appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "Database Error", true)
+	}
+
+	// AppD End BT & Exit Call
+	appd.EndExitcall(exitHandle)
+	appd.EndBT(btHandle)
+
 	return u.UserID, err
 }
 
 func (s *fixedService) GetUsers(id string) ([]users.User, error) {
+	// AppD Start BT & Exit Call
+	btHandle := appd.StartBT("MongoDB GetUsers", "")
+	exitHandle := appd.StartExitcall(btHandle,"user-db")
+
 	if id == "" {
 		us, err := db.GetUsers()
+		// AppD Error
+		if err != nil {
+			appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "Database Error", true)
+		}
 		for k, u := range us {
 			u.AddLinks()
 			us[k] = u
 		}
+		// AppD End BT & Exit Call
+		appd.EndExitcall(exitHandle)
+		appd.EndBT(btHandle)
+
 		return us, err
 	}
 	u, err := db.GetUser(id)
 	u.AddLinks()
+
+	// AppD Error
+	if err != nil {
+		appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "Database Error", true)
+	}
+
+	// AppD End BT & Exit Call
+	appd.EndExitcall(exitHandle)
+	appd.EndBT(btHandle)
+
 	return []users.User{u}, err
 }
 
 func (s *fixedService) PostUser(u users.User) (string, error) {
+	// AppD Start BT & Exit Call
+	btHandle := appd.StartBT("MongoDB PostUser", "")
+	exitHandle := appd.StartExitcall(btHandle,"user-db")
+
 	u.NewSalt()
 	u.Password = calculatePassHash(u.Password, u.Salt)
 	err := db.CreateUser(&u)
+
+	// AppD Error
+	if err != nil {
+		appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "Database Error", true)
+	}
+
+	// AppD End BT & Exit Call
+	appd.EndExitcall(exitHandle)
+	appd.EndBT(btHandle)
+
 	return u.UserID, err
 }
 
 func (s *fixedService) GetAddresses(id string) ([]users.Address, error) {
+	// AppD Start BT & Exit Call
+	btHandle := appd.StartBT("MongoDB GetAddresses", "")
+	exitHandle := appd.StartExitcall(btHandle,"user-db")
+
 	if id == "" {
 		as, err := db.GetAddresses()
+
+		// AppD Error
+		if err != nil {
+			appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "Database Error", true)
+		}
+
 		for k, a := range as {
 			a.AddLinks()
 			as[k] = a
 		}
+		// AppD End BT & Exit Call
+		appd.EndExitcall(exitHandle)
+		appd.EndBT(btHandle)
+
 		return as, err
 	}
 	a, err := db.GetAddress(id)
 	a.AddLinks()
+
+	// AppD Error
+	if err != nil {
+		appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "Database Error", true)
+	}
+
+	// AppD End BT & Exit Call
+	appd.EndExitcall(exitHandle)
+	appd.EndBT(btHandle)
+
 	return []users.Address{a}, err
 }
 
 func (s *fixedService) PostAddress(add users.Address, userid string) (string, error) {
+	// AppD Start BT & Exit Call
+	btHandle := appd.StartBT("MongoDB PostAddress", "")
+	exitHandle := appd.StartExitcall(btHandle,"user-db")
+
 	err := db.CreateAddress(&add, userid)
+
+	// AppD Error
+	if err != nil {
+		appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "Database Error", true)
+	}
+
+	// AppD End BT & Exit Call
+	appd.EndExitcall(exitHandle)
+	appd.EndBT(btHandle)
+
 	return add.ID, err
 }
 
 func (s *fixedService) GetCards(id string) ([]users.Card, error) {
+	// AppD Start BT & Exit Call
+	btHandle := appd.StartBT("MongoDB GetCards", "")
+	exitHandle := appd.StartExitcall(btHandle,"user-db")
+
 	if id == "" {
 		cs, err := db.GetCards()
+
+		// AppD Error
+		if err != nil {
+			appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "Database Error", true)
+		}
+
 		for k, c := range cs {
 			c.AddLinks()
 			cs[k] = c
 		}
+
+		// AppD End BT & Exit Call
+		appd.EndExitcall(exitHandle)
+		appd.EndBT(btHandle)
+
 		return cs, err
 	}
 	c, err := db.GetCard(id)
 	c.AddLinks()
+
+	// AppD Error
+	if err != nil {
+		appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "Database Error", true)
+	}
+
+	// AppD End BT & Exit Call
+	appd.EndExitcall(exitHandle)
+	appd.EndBT(btHandle)
+
 	return []users.Card{c}, err
 }
 
 func (s *fixedService) PostCard(card users.Card, userid string) (string, error) {
+	// AppD Start BT & Exit Call
+	btHandle := appd.StartBT("MongoDB PostCard", "")
+	exitHandle := appd.StartExitcall(btHandle,"user-db")
+
 	err := db.CreateCard(&card, userid)
+
+	// AppD Error
+	if err != nil {
+		appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "Database Error", true)
+	}
+
+	// AppD End BT & Exit Call
+	appd.EndExitcall(exitHandle)
+	appd.EndBT(btHandle)
+
 	return card.ID, err
 }
 

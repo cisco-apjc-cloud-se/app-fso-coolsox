@@ -66,6 +66,7 @@ user_db:
     version: 1.0.0
 # User settings
 user:
+    APPD_TIERNAME: "user"
     version: 1.0.0
 
 # Controls the deployment of build-in load-test

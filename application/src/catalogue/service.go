@@ -13,6 +13,7 @@ import (
 
 	// AppDynamics Go SDK Agent
 	appd "appdynamics"
+	// Note: Only Get() function instrumented currently
 )
 
 // Service is the catalogue service, providing read operations on a saleable
@@ -161,7 +162,7 @@ func (s *catalogueService) Get(id string) (Sock, error) {
 
 		// AppD
 		appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "database error", true)
-		
+
 		return Sock{}, ErrNotFound
 	}
 

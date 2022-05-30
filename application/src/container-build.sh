@@ -63,15 +63,15 @@ fi
 # echo ""
 #
 # payment
-echo ""
-echo "Building payment container (version ${VERSION})"
-cd payment
-sh scripts/build.sh ${REPO} ${VERSION}
-cd ..
-echo ""
-echo "Pushing payment container to repository ${REPO}"
-docker push ${REPO}:payment-${VERSION}
-echo ""
+# echo ""
+# echo "Building payment container (version ${VERSION})"
+# cd payment
+# sh scripts/build.sh ${REPO} ${VERSION}
+# cd ..
+# echo ""
+# echo "Pushing payment container to repository ${REPO}"
+# docker push ${REPO}:payment-${VERSION}
+# echo ""
 #
 # # queue-master
 # echo ""
@@ -96,15 +96,15 @@ echo ""
 # echo ""
 #
 # # user
-# echo ""
-# echo "Building user container (version ${VERSION})"
-# cd user
-# docker build -t ${REPO}:user-${VERSION} .
-# cd ..
-# echo ""
-# echo "Pushing user container to repository ${REPO}"
-# docker push ${REPO}:user-${VERSION}
-# echo ""
+echo ""
+echo "Building user container (version ${VERSION})"
+cd user
+docker build -t ${REPO}:user-${VERSION} .
+cd ..
+echo ""
+echo "Pushing user container to repository ${REPO}"
+docker push ${REPO}:user-${VERSION}
+echo ""
 #
 # # user-db
 # echo ""

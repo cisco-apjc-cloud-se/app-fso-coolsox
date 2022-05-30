@@ -21,6 +21,10 @@ import (
 	// zipkin "github.com/openzipkin/zipkin-go-opentracing"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	commonMiddleware "github.com/weaveworks/common/middleware"
+
+	// AppDynamics Go SDK Agent
+	"strconv"
+	appd "appdynamics"
 )
 
 var (
@@ -40,6 +44,16 @@ const (
 	ServiceName = "user"
 )
 
+//AppD middleware to enclose the routing handling functions and monitor Business Transactions
+func appdynamicsMiddleware(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				btHandle := appd.StartBT(r.URL.Path, "")
+				next.ServeHTTP(w, r)
+				appd.EndBT(btHandle)
+				fmt.Printf("AppD Middleware sucessfully instrumented BT with handle: %x and URL.Path: %s\n", btHandle, r.URL.Path)
+		})
+}
+
 func init() {
 	stdprometheus.MustRegister(HTTPLatency)
 	// flag.StringVar(&zip, "zipkin", os.Getenv("ZIPKIN"), "Zipkin address")
@@ -52,6 +66,60 @@ func main() {
 	flag.Parse()
 	// Mechanical stuff.
 	errc := make(chan error)
+
+	// AppDynamics SDK initialization
+	cfg := appd.Config{}
+	cfg.AppName = os.Getenv("APPD_APPNAME") // "exampleapp"
+	cfg.TierName = os.Getenv("APPD_TIERNAME")
+	var (
+		appd_hostname string
+		appd_usessl bool
+		appd_port uint64
+		err error
+	)
+	appd_hostname, err = os.Hostname()
+	if err != nil {
+		fmt.Printf("Error determining hostname\n")
+	}
+	cfg.NodeName = appd_hostname // os.Getenv("APPD_NODENAME")
+	cfg.Controller.Host = os.Getenv("APPD_CONTROLLER_HOST") // "my-appd-controller.example.org"
+	appd_port, err = strconv.ParseUint(os.Getenv("APPD_CONTROLLER_PORT"), 10 ,16)
+	if err != nil {
+		fmt.Printf("Error converting AppDynamics Controller Port from environmental variable\n")
+	}
+	cfg.Controller.Port = uint16(appd_port) // 8090
+	appd_usessl, err = strconv.ParseBool(os.Getenv("APPD_CONTROLLER_USE_SSL"))
+	if err != nil {
+		fmt.Printf("Error converting AppDynamics Controller SSL use from environmental variable\n")
+	}
+	cfg.Controller.UseSSL = appd_usessl // false
+	cfg.Controller.Account = os.Getenv("APPD_CONTROLLER_ACCOUNT") // "customer1"
+	cfg.Controller.AccessKey = os.Getenv("APPD_CONTROLLER_ACCESS_KEY")// "secret"
+	cfg.InitTimeoutMs = 5000  // Wait up to 1s for initialization to finish // Needs to be >1s <5s for Backend..
+
+	if err := appd.InitSDK(&cfg); err != nil {
+		fmt.Printf("Error initializing the AppDynamics SDK\n")
+	} else {
+		fmt.Printf("Initialized AppDynamics SDK successfully\n")
+	}
+
+	// AppDynamics Backend - MySQL Database
+	backendName := "user-db"
+	backendType := appd.APPD_BACKEND_DB
+	backendProperties := map[string]string{
+		"HOST":"user-db",
+		"PORT":"27017",
+		"DATABASE":"users",
+		"VENDOR":"MongoDB",
+		"VERSION":"3.0",
+	}
+	resolveBackend := false
+
+	if err := appd.AddBackend(backendName, backendType, backendProperties, resolveBackend); err != nil {
+		fmt.Printf("Error adding the AppDynamics backend\n")
+	} else {
+		fmt.Printf("Added AppDynamics backend successfully\n")
+	}
 
 	// Log domain.
 	var logger log.Logger
@@ -96,6 +164,13 @@ func main() {
 		// }
 		stdopentracing.InitGlobalTracer(tracer)
 	}
+
+	// AppD Start Backend Test
+	btHandle := appd.StartBT("MongoDB Test", "")
+	exitHandle := appd.StartExitcall(btHandle,"user-db")
+	fmt.Printf("AppD Middleware sucessfully started BT with handle: %x and name: %s\n", btHandle, "MongoDB Test")
+	fmt.Printf("AppD Middleware sucessfully started Exit Call with handle: %x and backend: %s\n", exitHandle, "user-db")
+
 	dbconn := false
 	for !dbconn {
 		err := db.Init()
@@ -104,10 +179,16 @@ func main() {
 				corelog.Fatal(err)
 			}
 			corelog.Print(err)
+			// AppD Log Backend Error
+			appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "Unable to connect to Database", true)
 		} else {
 			dbconn = true
 		}
 	}
+
+	// AppD Close Backend Test
+	appd.EndExitcall(exitHandle)
+	appd.EndBT(btHandle)
 
 	fieldKeys := []string{"method"}
 	// Service domain.
@@ -139,6 +220,9 @@ func main() {
 
 	// HTTP router
 	router := api.MakeHTTPHandler(endpoints, logger, tracer)
+
+	// Inject AppDynamics Middleware
+	router.Use(appdynamicsMiddleware)
 
 	httpMiddleware := []commonMiddleware.Interface{
 		commonMiddleware.Instrument{
