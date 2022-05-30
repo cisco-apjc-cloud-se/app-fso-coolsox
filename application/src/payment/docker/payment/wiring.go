@@ -9,7 +9,21 @@ import (
 
 	"github.com/microservices-demo/payment/middleware"
 	stdopentracing "github.com/opentracing/opentracing-go"
+
+	// AppDynamics Go SDK Agent
+	"strconv"
+	appd "appdynamics"
 )
+
+//AppD middleware to enclose the routing handling functions and monitor Business Transactions
+func appdynamicsMiddleware(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				btHandle := appd.StartBT(r.URL.Path, "")
+				next.ServeHTTP(w, r)
+				appd.EndBT(btHandle)
+				fmt.Printf("AppD Middleware sucessfully instrumented BT with handle: %x and URL.Path: %s\n", btHandle, r.URL.Path)
+		})
+}
 
 func WireUp(ctx context.Context, declineAmount float32, tracer stdopentracing.Tracer, serviceName string) (http.Handler, log.Logger) {
 	// Log domain.
@@ -31,6 +45,9 @@ func WireUp(ctx context.Context, declineAmount float32, tracer stdopentracing.Tr
 	endpoints := MakeEndpoints(service, tracer)
 
 	router := MakeHTTPHandler(ctx, endpoints, logger, tracer)
+
+	// Inject AppDynamics Middleware
+	router.Use(appdynamicsMiddleware)
 
 	httpMiddleware := []middleware.Interface{
 		middleware.Instrument{
