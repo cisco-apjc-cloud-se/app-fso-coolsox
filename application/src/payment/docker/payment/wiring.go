@@ -11,7 +11,7 @@ import (
 	stdopentracing "github.com/opentracing/opentracing-go"
 
 	// AppDynamics Go SDK Agent
-	"strconv"
+	"fmt"
 	appd "appdynamics"
 )
 
