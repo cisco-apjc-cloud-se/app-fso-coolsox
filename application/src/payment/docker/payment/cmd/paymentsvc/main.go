@@ -31,42 +31,6 @@ func main() {
 	)
 	flag.Parse()
 
-	// AppDynamics SDK initialization
-	cfg := appd.Config{}
-	cfg.AppName = os.Getenv("APPD_APPNAME") // "exampleapp"
-	cfg.TierName = os.Getenv("APPD_TIERNAME")
-	var (
-		appd_hostname string
-		appd_usessl bool
-		appd_port uint64
-		// err error
-	)
-	appd_hostname, err = os.Hostname()
-	if err != nil {
-		fmt.Printf("Error determining hostname\n")
-	}
-	cfg.NodeName = appd_hostname // os.Getenv("APPD_NODENAME")
-	cfg.Controller.Host = os.Getenv("APPD_CONTROLLER_HOST") // "my-appd-controller.example.org"
-	appd_port, err = strconv.ParseUint(os.Getenv("APPD_CONTROLLER_PORT"), 10 ,16)
-	if err != nil {
-		fmt.Printf("Error converting AppDynamics Controller Port from environmental variable\n")
-	}
-	cfg.Controller.Port = uint16(appd_port) // 8090
-	appd_usessl, err = strconv.ParseBool(os.Getenv("APPD_CONTROLLER_USE_SSL"))
-	if err != nil {
-		fmt.Printf("Error converting AppDynamics Controller SSL use from environmental variable\n")
-	}
-	cfg.Controller.UseSSL = appd_usessl // false
-	cfg.Controller.Account = os.Getenv("APPD_CONTROLLER_ACCOUNT") // "customer1"
-	cfg.Controller.AccessKey = os.Getenv("APPD_CONTROLLER_ACCESS_KEY")// "secret"
-	cfg.InitTimeoutMs = 5000  // Wait up to 1s for initialization to finish // Needs to be >1s <5s for Backend..
-
-	if err := appd.InitSDK(&cfg); err != nil {
-		fmt.Printf("Error initializing the AppDynamics SDK\n")
-	} else {
-		fmt.Printf("Initialized AppDynamics SDK successfully\n")
-	}
-
 	var tracer stdopentracing.Tracer
 	{
 		// Log domain.
@@ -103,6 +67,42 @@ func main() {
 	// Mechanical stuff.
 	errc := make(chan error)
 	ctx := context.Background()
+
+	// AppDynamics SDK initialization
+	cfg := appd.Config{}
+	cfg.AppName = os.Getenv("APPD_APPNAME") // "exampleapp"
+	cfg.TierName = os.Getenv("APPD_TIERNAME")
+	var (
+		appd_hostname string
+		appd_usessl bool
+		appd_port uint64
+		// err error
+	)
+	appd_hostname, err = os.Hostname()
+	if err != nil {
+		fmt.Printf("Error determining hostname\n")
+	}
+	cfg.NodeName = appd_hostname // os.Getenv("APPD_NODENAME")
+	cfg.Controller.Host = os.Getenv("APPD_CONTROLLER_HOST") // "my-appd-controller.example.org"
+	appd_port, err = strconv.ParseUint(os.Getenv("APPD_CONTROLLER_PORT"), 10 ,16)
+	if err != nil {
+		fmt.Printf("Error converting AppDynamics Controller Port from environmental variable\n")
+	}
+	cfg.Controller.Port = uint16(appd_port) // 8090
+	appd_usessl, err = strconv.ParseBool(os.Getenv("APPD_CONTROLLER_USE_SSL"))
+	if err != nil {
+		fmt.Printf("Error converting AppDynamics Controller SSL use from environmental variable\n")
+	}
+	cfg.Controller.UseSSL = appd_usessl // false
+	cfg.Controller.Account = os.Getenv("APPD_CONTROLLER_ACCOUNT") // "customer1"
+	cfg.Controller.AccessKey = os.Getenv("APPD_CONTROLLER_ACCESS_KEY")// "secret"
+	cfg.InitTimeoutMs = 5000  // Wait up to 1s for initialization to finish // Needs to be >1s <5s for Backend..
+
+	if err := appd.InitSDK(&cfg); err != nil {
+		fmt.Printf("Error initializing the AppDynamics SDK\n")
+	} else {
+		fmt.Printf("Initialized AppDynamics SDK successfully\n")
+	}
 
 	handler, logger := payment.WireUp(ctx, float32(*declineAmount), tracer, ServiceName)
 
