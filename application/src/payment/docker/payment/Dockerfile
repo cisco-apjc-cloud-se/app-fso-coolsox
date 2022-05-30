@@ -26,7 +26,7 @@ RUN cd /go/src/github.com/microservices-demo/payment \
 # RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /app/main github.com/microservices-demo/payment/cmd/paymentsvc
 RUN go build -a -o /app/main github.com/microservices-demo/payment/cmd/paymentsvc
 
-CMD ["/app/main", "-port=80"]
+# CMD ["/app/main", "-port=80"]
 
 #EXPOSE 80
 
