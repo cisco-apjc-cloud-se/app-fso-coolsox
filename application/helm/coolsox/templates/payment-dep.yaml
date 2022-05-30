@@ -36,7 +36,7 @@ spec:
           - name: APPD_APPNAME
             value: {{.Values.appd.APPD_APPNAME}}
           - name: APPD_TIERNAME
-            value: {{.Values.catalogue.APPD_TIERNAME}}
+            value: {{.Values.payment.APPD_TIERNAME}}
           # - name: APPD_NODENAME
           #   value: {{.Values.appd.APPD_NODENAME}}
           - name: APPD_CONTROLLER_HOST

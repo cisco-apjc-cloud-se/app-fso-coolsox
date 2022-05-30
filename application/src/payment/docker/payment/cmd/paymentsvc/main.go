@@ -76,7 +76,7 @@ func main() {
 		appd_hostname string
 		appd_usessl bool
 		appd_port uint64
-		// err error
+		err error
 	)
 	appd_hostname, err = os.Hostname()
 	if err != nil {
