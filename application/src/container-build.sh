@@ -19,17 +19,17 @@ fi
 # docker push ${REPO}:carts-${VERSION}
 #
 # catalogue and catalogue-db
-echo ""
-echo "Building catalogue and catalogue-db containers (${VERSION})"
-cd catalogue
-sh scripts/build.sh ${REPO} ${VERSION}
-cd ..
-echo ""
-echo "pushing catalogue container to repository ${REPO}"
-docker push ${REPO}:catalogue-${VERSION}
-echo ""
-echo "pushing catalogue container to repository ${REPO}"
-docker push ${REPO}:catalogue-db-${VERSION}
+# echo ""
+# echo "Building catalogue and catalogue-db containers (${VERSION})"
+# cd catalogue
+# sh scripts/build.sh ${REPO} ${VERSION}
+# cd ..
+# echo ""
+# echo "pushing catalogue container to repository ${REPO}"
+# docker push ${REPO}:catalogue-${VERSION}
+# echo ""
+# echo "pushing catalogue container to repository ${REPO}"
+# docker push ${REPO}:catalogue-db-${VERSION}
 #
 # front-end
 # echo ""
@@ -63,15 +63,15 @@ docker push ${REPO}:catalogue-db-${VERSION}
 # echo ""
 #
 # payment
-# echo ""
-# echo "Building payment container (version ${VERSION})"
-# cd payment
-# sh scripts/build.sh ${REPO} ${VERSION}
-# cd ..
-# echo ""
-# echo "Pushing payment container to repository ${REPO}"
-# docker push ${REPO}:payment-${VERSION}
-# echo ""
+echo ""
+echo "Building payment container (version ${VERSION})"
+cd payment
+sh scripts/build.sh ${REPO} ${VERSION}
+cd ..
+echo ""
+echo "Pushing payment container to repository ${REPO}"
+docker push ${REPO}:payment-${VERSION}
+echo ""
 #
 # # queue-master
 # echo ""

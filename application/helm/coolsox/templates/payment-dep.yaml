@@ -32,6 +32,23 @@ spec:
         image: {{.Values.kubernetes.repository}}:payment
         {{- end }}
         imagePullPolicy: {{ .Values.kubernetes.imagePullPolicy }}
+        env:
+          - name: APPD_APPNAME
+            value: {{.Values.appd.APPD_APPNAME}}
+          - name: APPD_TIERNAME
+            value: {{.Values.catalogue.APPD_TIERNAME}}
+          # - name: APPD_NODENAME
+          #   value: {{.Values.appd.APPD_NODENAME}}
+          - name: APPD_CONTROLLER_HOST
+            value: {{.Values.appd.APPD_CONTROLLER_HOST}}
+          - name: APPD_CONTROLLER_PORT
+            value: {{ quote .Values.appd.APPD_CONTROLLER_PORT}}
+          - name: APPD_CONTROLLER_USE_SSL
+            value: {{ quote .Values.appd.APPD_CONTROLLER_USE_SSL}}
+          - name: APPD_CONTROLLER_ACCOUNT
+            value: {{.Values.appd.APPD_CONTROLLER_ACCOUNT}}
+          - name: APPD_CONTROLLER_ACCESS_KEY
+            value: {{.Values.appd.APPD_CONTROLLER_ACCESS_KEY}}
         resources:
           limits:
             cpu: 100m

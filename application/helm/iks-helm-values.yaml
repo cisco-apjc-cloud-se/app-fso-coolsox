@@ -53,6 +53,7 @@ orders:
     version: 1.0.0
 # Payment settings
 payment:
+    APPD_TIERNAME: "payment"
     version: 1.0.0
 # Queue-master settings
 queue_master:
