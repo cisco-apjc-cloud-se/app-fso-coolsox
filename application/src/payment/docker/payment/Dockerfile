@@ -29,3 +29,16 @@ RUN go build -a -o /app/main github.com/microservices-demo/payment/cmd/paymentsv
 CMD ["/app/main", "-port=80"]
 
 #EXPOSE 80
+
+## Single Container for AppD
+RUN	chmod +x /app/main && \
+	# chown -R ${SERVICE_USER}:${SERVICE_GROUP} /app /images && \
+	setcap 'cap_net_bind_service=+ep' /app/main
+
+# USER ${SERVICE_USER}cd /
+
+CMD ["/app/main", "-port=80"]
+
+EXPOSE 80
+
+# CMD ["bash"]

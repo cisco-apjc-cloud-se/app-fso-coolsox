@@ -33,9 +33,12 @@ mkdir "${CODE_DIR}"/docker/payment/vendor && cp "${CODE_DIR}"/vendor/manifest "$
 
 IMAGE_BASE="${REPO}:payment"
 
-${DOCKER_CMD} build -t ${IMAGE_BASE}-dev -f "${CODE_DIR}"/docker/payment/Dockerfile "${CODE_DIR}"/docker/payment;
-${DOCKER_CMD} create --name payment ${IMAGE_BASE}-dev;
-${DOCKER_CMD} cp payment:/app/main "${CODE_DIR}"/docker/payment/app;
-${DOCKER_CMD} rm payment;
-${DOCKER_CMD} build -t ${IMAGE_BASE}-${VERSION} -f "${CODE_DIR}"/docker/payment/Dockerfile-release "${CODE_DIR}"/docker/payment;
-${DOCKER_CMD} image rm ${IMAGE_BASE}-dev
+# ${DOCKER_CMD} build -t ${IMAGE_BASE}-dev -f "${CODE_DIR}"/docker/payment/Dockerfile "${CODE_DIR}"/docker/payment;
+# ${DOCKER_CMD} create --name payment ${IMAGE_BASE}-dev;
+# ${DOCKER_CMD} cp payment:/app/main "${CODE_DIR}"/docker/payment/app;
+# ${DOCKER_CMD} rm payment;
+# ${DOCKER_CMD} build -t ${IMAGE_BASE}-${VERSION} -f "${CODE_DIR}"/docker/payment/Dockerfile-release "${CODE_DIR}"/docker/payment;
+# ${DOCKER_CMD} image rm ${IMAGE_BASE}-dev
+
+## Use the single build container instead of alpine version ##
+$DOCKER_CMD build -t ${IMAGE_BASE}-${VERSION} "${CODE_DIR}"/docker/payment
