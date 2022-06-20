@@ -76,6 +76,10 @@ func (s *catalogueService) List(tags []string, order string, pageNum, pageSize i
 	var socks []Sock
 	query := baseQuery
 
+	// AppD
+	btHandle := appd.StartBT("MySQL List", "")
+	exitHandle := appd.StartExitcall(btHandle,"catalogue-db")
+
 	var args []interface{}
 
 	for i, t := range tags {
@@ -100,6 +104,10 @@ func (s *catalogueService) List(tags []string, order string, pageNum, pageSize i
 	err := s.db.Select(&socks, query, args...)
 	if err != nil {
 		s.logger.Log("database error", err)
+
+		// AppD
+		appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "database error", true)
+
 		return []Sock{}, ErrDBConnection
 	}
 	for i, s := range socks {
@@ -109,11 +117,19 @@ func (s *catalogueService) List(tags []string, order string, pageNum, pageSize i
 
 	socks = cut(socks, pageNum, pageSize)
 
+	// AppD
+	appd.EndExitcall(exitHandle)
+	appd.EndBT(btHandle)
+
 	return socks, nil
 }
 
 func (s *catalogueService) Count(tags []string) (int, error) {
 	query := "SELECT COUNT(DISTINCT sock.sock_id) FROM sock JOIN sock_tag ON sock.sock_id=sock_tag.sock_id JOIN tag ON sock_tag.tag_id=tag.tag_id"
+
+	// AppD
+	btHandle := appd.StartBT("MySQL Count", "")
+	exitHandle := appd.StartExitcall(btHandle,"catalogue-db")
 
 	var args []interface{}
 
@@ -133,6 +149,10 @@ func (s *catalogueService) Count(tags []string) (int, error) {
 
 	if err != nil {
 		s.logger.Log("database error", err)
+
+		// AppD
+		appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "database error", true)
+
 		return 0, ErrDBConnection
 	}
 	defer sel.Close()
@@ -142,8 +162,16 @@ func (s *catalogueService) Count(tags []string) (int, error) {
 
 	if err != nil {
 		s.logger.Log("database error", err)
+
+		// AppD
+		appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "database error", true)
+
 		return 0, ErrDBConnection
 	}
+
+	// AppD
+	appd.EndExitcall(exitHandle)
+	appd.EndBT(btHandle)
 
 	return count, nil
 }
@@ -152,7 +180,7 @@ func (s *catalogueService) Get(id string) (Sock, error) {
 	query := baseQuery + " WHERE sock.sock_id =? GROUP BY sock.sock_id;"
 
 	// AppD
-	btHandle := appd.StartBT("MySQL Get Test", "")
+	btHandle := appd.StartBT("MySQL Get", "")
 	exitHandle := appd.StartExitcall(btHandle,"catalogue-db")
 
 	var sock Sock
@@ -197,9 +225,18 @@ func (s *catalogueService) Health() []Health {
 func (s *catalogueService) Tags() ([]string, error) {
 	var tags []string
 	query := "SELECT name FROM tag;"
+
+	// AppD
+	btHandle := appd.StartBT("MySQL Tags", "")
+	exitHandle := appd.StartExitcall(btHandle,"catalogue-db")
+
 	rows, err := s.db.Query(query)
 	if err != nil {
 		s.logger.Log("database error", err)
+
+		// AppD
+		appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "database error", true)
+
 		return []string{}, ErrDBConnection
 	}
 	var tag string
@@ -207,10 +244,19 @@ func (s *catalogueService) Tags() ([]string, error) {
 		err = rows.Scan(&tag)
 		if err != nil {
 			s.logger.Log("database error", err)
+
+			// AppD
+			appd.AddExitcallError(exitHandle, appd.APPD_LEVEL_ERROR, "database error", true)
+
 			continue
 		}
 		tags = append(tags, tag)
 	}
+
+	// AppD
+	appd.EndExitcall(exitHandle)
+	appd.EndBT(btHandle)
+	
 	return tags, nil
 }
 

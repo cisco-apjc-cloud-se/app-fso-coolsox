@@ -47,7 +47,8 @@ const (
 //AppD middleware to enclose the routing handling functions and monitor Business Transactions
 func appdynamicsMiddleware(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				btHandle := appd.StartBT(r.URL.Path, "")
+				hdr := r.Header.Get(appd.APPD_CORRELATION_HEADER_NAME)
+				btHandle := appd.StartBT(r.URL.Path, hdr)
 				next.ServeHTTP(w, r)
 				appd.EndBT(btHandle)
 				fmt.Printf("AppD Middleware sucessfully instrumented BT with handle: %x and URL.Path: %s\n", btHandle, r.URL.Path)
