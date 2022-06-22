@@ -18,7 +18,7 @@ echo ""
 echo "pushing carts container to repository ${REPO}"
 docker push ${REPO}:carts-${VERSION}
 
-catalogue and catalogue-db
+# catalogue and catalogue-db
 echo ""
 echo "Building catalogue and catalogue-db containers (${VERSION})"
 cd catalogue
@@ -31,7 +31,7 @@ echo ""
 echo "pushing catalogue container to repository ${REPO}"
 docker push ${REPO}:catalogue-db-${VERSION}
 
-front-end
+# front-end
 echo ""
 echo "Building front-end container (version ${VERSION})"
 docker build -t ${REPO}:front-end-${VERSION} front-end/.
@@ -40,16 +40,16 @@ echo "Pushing front-end container to repository ${REPO}"
 docker push ${REPO}:front-end-${VERSION}
 echo ""
 
-# front-end with BRUM
-echo ""
-echo "Building front-end appd brum container (version ${VERSION})"
-cd front-end-appd-brum
-sh scripts/build.sh ${REPO} ${VERSION}
-cd ..
-echo ""
-echo "Pushing front-end appd brum container to repository ${REPO}"
-docker push ${REPO}:front-end-appd-brum-${VERSION}
-echo ""
+# # front-end with BRUM
+# echo ""
+# echo "Building front-end appd brum container (version ${VERSION})"
+# cd front-end-appd-brum
+# sh scripts/build.sh ${REPO} ${VERSION}
+# cd ..
+# echo ""
+# echo "Pushing front-end appd brum container to repository ${REPO}"
+# docker push ${REPO}:front-end-appd-brum-${VERSION}
+# echo ""
 
 # orders
 echo ""
@@ -62,7 +62,7 @@ echo "Pushing orders container to repository ${REPO}"
 docker push ${REPO}:orders-${VERSION}
 echo ""
 
-payment
+# payment
 echo ""
 echo "Building payment container (version ${VERSION})"
 cd payment
