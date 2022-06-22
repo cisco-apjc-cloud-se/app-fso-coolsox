@@ -6,5 +6,7 @@ Please use the `container-build.sh` script to build the neccessary Docker images
 ./container-build.sh {version} {repo}
 ```
 
-## Note:
-None of the other scripts present have been updated. This includes the front-end and catalogue components modified to present a skinned "cool cars" shop.
+## Notes:
+- Originally a customer image was created for the AppDynamics Database monitoring agent.  This has been superceded with the official AppD DB monitoring container.  The original agent image has been moved the /old directory.
+- None of the other scripts present have been updated. This includes the front-end and catalogue components modified to present a skinned "cool cars" shop.
+- In order to integrate the AppD Go SDK library, the User, Payment and Catalogue components have been modified.  The Dockerfile has been modified to include the latest GO SDK library and also to upgrade certain Go components (gorilla mux) in the original Weaveworks build to support the recommended AppD integration points.  See the components `/scripts/build.sh` script for more details.
