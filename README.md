@@ -10,6 +10,7 @@ The CoolSox application is based on the [original open-source microservices demo
 
 In case of questions or comments, then please contact
 
+- [Richard Watson] (mailto:richwats@cisco.com)
 - [Morten Skriver](mailto:moskrive@cisco.com)
 - [Peter Charpentier](mailto:pcharpen@cisco.com)
 
@@ -18,7 +19,7 @@ In case of questions or comments, then please contact
 - **[Kubernetes](https://kubernetes.io/)**: The application is designed to run on Kubernetes
 - **[AppDynamics](https://www.appdynamics.com) for Application, End-User Experience, Database, and Cluster Visibility**: The Kubernetes cluster is instrumented with AppDynamics [cluster-agent](https://www.appdynamics.com/solutions/kubernetes-monitoring) to monitor the health of the entire cluster, including every node and namespace down to the container level. The cluster-agent is also used to auto-instrument the Java, NodeJS, and .Net components of the CoolSox applcation. **[Get your AppDynamics free trial here](https://www.appdynamics.com/free-trial/)**.
 - **[ThousandEyes](https://www.thousandeyes.com/) for external Network Visibility and End-User Experience:** ThousandEyes [Browser Synthetics](https://www.thousandeyes.com/product/browser-synthetics) simulates users interacting with the application. ThousandEyes Cloud Agents are deployed, across the globe, to simulate these interactions and provide metrics, such as _availability_, _response time_, _latency_, _transaction times_, _errors_. **[Get your ThousandEyes free trial here](https://www.thousandeyes.com/signup/)**.
-- **[Intersight Workload Optimizer (IWO)](https://www.intersight.com) for Resource Management**: IWO provides a holistic overview of your data center, both on-prem and in public cloud, and allows you to right-size your workload resources based on the applications that run on them.
+- **[Intersight Workload Optimizer (IWO)](https://www.intersight.com) for Application Resource Management**: IWO provides a holistic overview of your data center, both on-prem and in public cloud, and allows you to automatically right-size your workload resources based on the applications actual demand.  This includes both vertical and horizontal pod scaling.
 - **[ThousandEyes & AppDynamics Integration](https://www.appdynamics.com/product/network-monitoring) for complete application service visibility:** ThousandEyes alerts are natively configured to trigger alerts in AppDynamics to correlate external network and user experience problems with internal application metrics.
 - **Synthetic Load Generation:** The application demo comes with a background job that creates realistic usage patterns on the website using load generator(s).
 
@@ -27,11 +28,11 @@ In case of questions or comments, then please contact
 This repository contains a number of directories that are used to separate the FSO with CoolSox demonstration into logical individual components.
 
 - **application**: Contains all components directly related to the CoolSox application
-  - **deploy**: Contains scripts that can be used to deploy the application onto a Kubernetes cluster
+  - **helm**: Contains Helm scripts that can be used to deploy the application onto a Kubernetes cluster
   - **src**: Contains the source required to build/re-build the application containers
-- **infrastructure**: Contains all components related to deploying a Kubernetes environment using Infrastructure as Code
+<!-- - **infrastructure**: Contains all components related to deploying a Kubernetes environment using Infrastructure as Code
 - **instrumentation**: Contains all components related to deploying the instrumentation solutions (AppDynamics, ThousandEyes, IWO, etc.)
-- **playbook**: Contains a detailed playbook describing how the environment can be deployed
+- **playbook**: Contains a detailed playbook describing how the environment can be deployed -->
 
 ## Application Architecture
 
