@@ -2,7 +2,15 @@ apiVersion: v1
 entries:
   coolsox:
   - apiVersion: v1
-    created: "2022-05-30T17:14:44.276503+10:00"
+    created: "2022-07-29T18:42:31.893691+10:00"
+    description: A Helm chart for CoolSox orchestrated for AppDynamics
+    digest: 3022fa36c3057944cb253ee90e716fa975615fe6876bea1618857a2bcc470ab3
+    name: coolsox
+    urls:
+    - coolsox-0.2.3.tgz
+    version: 0.2.3
+  - apiVersion: v1
+    created: "2022-07-29T18:42:31.891592+10:00"
     description: A Helm chart for CoolSox orchestrated for AppDynamics
     digest: 2fa761727791b197d3a3207bbc4f58926c1295a5aaa206d2548b0a9523c20c9c
     name: coolsox
@@ -10,7 +18,7 @@ entries:
     - coolsox-0.2.2.tgz
     version: 0.2.2
   - apiVersion: v1
-    created: "2022-05-30T17:14:44.275507+10:00"
+    created: "2022-07-29T18:42:31.889083+10:00"
     description: A Helm chart for CoolSox orchestrated for AppDynamics
     digest: ae7a3aaf35061fa50d47f902ee2cda9c88c95df0bd7a82fcef4c00a816352e05
     name: coolsox
@@ -18,11 +26,11 @@ entries:
     - coolsox-0.2.1.tgz
     version: 0.2.1
   - apiVersion: v1
-    created: "2022-05-30T17:14:44.273984+10:00"
+    created: "2022-07-29T18:42:31.886804+10:00"
     description: A Helm chart for CoolSox orchestrated for AppDynamics
     digest: 830d3b809aa4d08637f0eef3940b4dea9b2c9f326251619c13f86c5012fbb777
     name: coolsox
     urls:
     - coolsox-0.2.0.tgz
     version: 0.2.0
-generated: "2022-05-30T17:14:44.272299+10:00"
+generated: "2022-07-29T18:42:31.884379+10:00"

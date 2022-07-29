@@ -1,4 +1,4 @@
 apiVersion: v1
 description: A Helm chart for CoolSox orchestrated for AppDynamics
 name: coolsox
-version: 0.2.2
+version: 0.2.3

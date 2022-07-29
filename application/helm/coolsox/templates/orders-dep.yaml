@@ -37,8 +37,8 @@ spec:
            value: {{ .Values.java.options }}
         resources:
           limits:
-            cpu: 500m
-            memory: 2000Mi
+            cpu: 600m
+            memory: 6000Mi
           requests:
             cpu: 200m
             memory: 2000Mi
